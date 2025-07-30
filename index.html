@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Panel de Regencia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 1️⃣  Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- 2️⃣  CSS “vanilla” con la animación  -->
+  <style>
+    /* -- SE MANTIENE LA ANIMACIÓN ORIGINAL -- */
+    .netbook {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .netbook::before{
+      content:'';
+      position:absolute; inset:0;
+      border-radius:10px;
+      border:2px solid transparent;
+      animation:recorrerBorde 2s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes recorrerBorde{
+      0%{border-top:2px solid #00f; border-right:2px solid transparent;}
+      25%{border-right:2px solid #00f; border-bottom:2px solid transparent;}
+      50%{border-bottom:2px solid #00f; border-left:2px solid transparent;}
+      75%{border-left:2px solid #00f;}
+      100%{border:2px solid transparent;}
+    }
+  </style>
+
+  <!-- 3️⃣  Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        fontFamily:{ sans:['Montserrat','sans‑serif'] },
+      },
+    };
+  </script>
+</head>
+
+<body class="bg-slate-300 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300 font-sans">
+  <header class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <h1 class="text-2xl font-semibold">Dashboard</h1>
+
+    <div class="flex gap-2">
+      <button
+        class="bg-slate-200 hover:bg-gray-400 text-gray-800 dark:bg-gray-700 dark:text-gray-50 dark:hover:bg-slate-900 px-4 py-2 rounded transition"
+        onclick="toggleTheme()"
+      >
+        Cambiar tema
+      </button>
+      <button
+        class="bg-slate-700 hover:bg-gray-600 text-white dark:bg-black px-4 py-2 rounded transition"
+        onclick="history.back()"
+      >
+        ⮐ Volver
+      </button>
+    </div>
+  </header>
+
+  <!-- Notificación -->
+  <div id="notificacion"
+       class="hidden max-w-5xl mx-auto bg-green-100 text-green-900 dark:bg-green-800 dark:text-green-100 px-4 py-3 mb-6 rounded border-l-4 border-green-500 text-sm">
+  </div>
+
+  <!-- Rack -->
+  <main id="rack-container"
+        class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+  </main>
+
+    <script>
+      const rack = document.getElementById('rack-container');
+
+      for (let i = 1; i <= 30; i++) {
+        const div = document.createElement('div');
+        div.className =
+          'netbook bg-slate-200 dark:bg-gray-800 text-center rounded-xl p-4 flex flex-col items-center justify-center shadow cursor-pointer hover:ring-2 hover:ring-blue-400 transition';
+        div.innerHTML = `
+          <img src="imagenes/netbook.svg" alt="Netbook ${i}" class="w-12 h-auto mb-2" />
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">#${i}</span>
+        `;
+        div.addEventListener('click', () =>
+          mostrarNotificacion(`Seleccionaste la Netbook #${i}`)
+        );
+        rack.appendChild(div);
+      }
+
+      function mostrarNotificacion(mensaje) {
+        const notif = document.getElementById('notificacion');
+        notif.textContent = mensaje;
+        notif.classList.remove('hidden');
+        setTimeout(() => {
+          notif.classList.add('hidden');
+        }, 3000);
+      }
+
+      function toggleTheme() {
+        document.documentElement.classList.toggle('dark');
+      }
+    </script>
+  </body>
+</html>
